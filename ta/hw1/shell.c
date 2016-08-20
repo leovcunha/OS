@@ -71,14 +71,12 @@ int cmd_pwd(struct tokens *tokens) {
 #define HOME "/home/vagrant"
 int cmd_cd(struct tokens *tokens) {
 	char *arg = tokens_get_token(tokens, 1);
-	if ((arg != NULL) || (arg == "~")) {
-		arg = HOME;
-	}
 	if (chdir(arg) != 0) {
 		perror("cd error");
 	}
-	fprintf(stdout, "Current working dir: %s\n", arg);
-	return 0
+	//fprintf(stdout, "Current working dir: %s\n", arg);
+	cmd_pwd(tokens);
+	return 0;
 }
 
 /* Looks up the built-in command, if it exists. */
@@ -137,26 +135,24 @@ int main(int argc, char *argv[]) {
 		}
 		else {
 			/* REPLACE this to run commands as programs. */
-			/*fprintf(stdout, "This shell doesn't know how to run programs.\n");*/
+			//fprintf(stdout, "This shell doesn't know how to run programs.\n");
 			char *prog_n = tokens_get_token(tokens, 0);
 			size_t n_args = tokens_get_length(tokens)
-				cpid = fork();
+			cpid = fork();
 			if (cpid < 0) {
 				perror("Fork Failed");
 				exit(1);
 			}
 			else if (cpid == 0) {
 
-				char **args =
-					execv(prog_n, args);
+				execv(prog_n, args);
 
 			}
 			else {
 				wait(NULL);
 				printf("Child Complete");
 
-			}
-		}
+			}		}
 
 		if (shell_is_interactive)
 			/* Please only print shell prompts when standard input is not a tty */
